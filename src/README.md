@@ -1,2 +1,2 @@
 # drf-yasg-serializer-converter
-Converts django serializer to openapi schema.
+Converts django serializer to drf-yasg openapi schema.
