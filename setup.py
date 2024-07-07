@@ -30,7 +30,9 @@ setup(
     url="https://github.com/Greewil/drf-yasg-serializer-converter",
     install_requires=['Django', 'drf-yasg'],
     keywords=['python', 'openapi schema generation', 'django serializer convertor'],
+    license="MIT",
     classifiers=[
+        "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.8",
         "Operating System :: Unix",
