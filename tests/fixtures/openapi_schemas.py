@@ -18,22 +18,19 @@ from drf_yasg import openapi
 
 id_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,
-    **{
-        "x-nullable": False
-    }
+    read_only=True,
 )
 address_property = openapi.Schema(
     type=openapi.TYPE_STRING,
-    read_only=False,
     **{
-        "x-nullable": False
+        "maxLength": 256,
     }
 )
 description_property = openapi.Schema(
     type=openapi.TYPE_STRING,
-    read_only=False,
     **{
-        "x-nullable": True
+        "maxLength": 512,
+        "x-nullable": True,
     }
     # TODO default=None
 )
