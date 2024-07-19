@@ -35,7 +35,6 @@ description_property = openapi.Schema(
         "maxLength": 512,
         "x-nullable": True,
     }
-    # TODO default=None
 )
 time_build_property = openapi.Schema(
     type=openapi.TYPE_STRING,
@@ -77,7 +76,11 @@ occupier_is_adult_property = openapi.Schema(
 
 house_basic_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    required=[],
+    description='',
+    required=[
+        'id',
+        'address',
+    ],
     properties={
         'id': id_property,
         'address': address_property,
@@ -86,7 +89,13 @@ house_basic_schema = openapi.Schema(
 
 house_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    required=[],  # TODO get required in base schema (depth=0)
+    description='',
+    required=[
+        'id',
+        'address',
+        'time_build',
+        'rooms_number',
+    ],  # TODO get required in base schema (depth=0)
     properties={
         'id': id_property,
         'address': address_property,
@@ -101,6 +110,11 @@ house_schema = openapi.Schema(
 
 house_occupier_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
+    description='',
+    required=[
+        'id',
+        'name',
+    ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
@@ -108,10 +122,14 @@ house_occupier_schema = openapi.Schema(
     }
 )
 
-# here read_only in house_schema should be false, because it was specified in serializers
+# here read_only in house_schema should be False, because it was specified фas False in serializers
 house_occupier_with_house_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    required=[],
+    description='',
+    required=[
+        'id',
+        'name',
+    ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
@@ -124,7 +142,12 @@ house_basic_schema_with_read_only = deepcopy(house_basic_schema)
 house_basic_schema_with_read_only.read_only = True
 house_occupier_with_basic_house_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    required=[],
+    description='',
+    required=[
+        'id',
+        'name',
+        'house',
+    ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
@@ -135,6 +158,7 @@ house_occupier_with_basic_house_schema = openapi.Schema(
 
 house_occupiers_list_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
+    description='',
     required=['id', 'name'],
     properties={}  # TODO
 
@@ -145,6 +169,7 @@ house_occupiers_list_schema = openapi.Schema(
 
 house_with_occupiers_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
+    description='',
     properties={
         'id': id_property,
         'address': address_property,

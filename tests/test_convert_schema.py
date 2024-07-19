@@ -11,13 +11,7 @@ from .fixtures.openapi_schemas import house_basic_schema, house_schema, house_oc
 
 
 def assert_generated_and_correct_schemas(generated_schema: openapi.Schema, correct_schema: openapi.Schema):
-    generated_schema_prop_items = generated_schema.properties.items()
-    correct_schema_prop_items = correct_schema.properties.items()
-    assert len(correct_schema_prop_items) == len(generated_schema_prop_items)
-    for key, value in correct_schema_prop_items:
-        print(key, value)
-        print(f'prop_item_key: {key}, value_dict: {dict(value)}')
-        assert dict(value) == dict(generated_schema.properties[key])
+    assert dict(correct_schema) == dict(generated_schema)
 
 
 @pytest.mark.parametrize("serializer, correct_schema", [
