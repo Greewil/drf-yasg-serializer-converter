@@ -9,7 +9,7 @@ class HouseModel(models.Model):
     square_meters = models.FloatField(default=100.1)
     rooms_number = models.IntegerField()
     owners_number = models.IntegerField(default=2, null=False, blank=False,
-                                           validators=[MinValueValidator(1), MaxValueValidator(100)])
+                                        validators=[MinValueValidator(1), MaxValueValidator(100)])
     is_abandoned = models.BooleanField(default=False, null=False, blank=False)
 
     class Meta:

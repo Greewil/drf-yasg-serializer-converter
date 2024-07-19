@@ -1,13 +1,13 @@
+from drf_yasg import openapi
+
 from .fixtures.conftest import *  # noqa: F401, F403
 
 from drf_yasg_serializer_converter.swaggers_schema_properties.openapi_schema_converters import get_schema
 from tests.fixtures.serializers import HouseSerializer, HouseBasicSerializer
-from .fixtures.openapi_schemas import house_basic_schema
+from .fixtures.openapi_schemas import house_basic_schema, house_schema
 
 
-def test_basic_convert():
-    generated_schema = get_schema(HouseBasicSerializer)
-    correct_schema = house_basic_schema
+def assert_generated_and_correct_schemas(generated_schema: openapi.Schema, correct_schema: openapi.Schema):
     generated_schema_prop_items = generated_schema.properties.items()
     correct_schema_prop_items = correct_schema.properties.items()
     assert len(correct_schema_prop_items) == len(generated_schema_prop_items)
@@ -15,3 +15,15 @@ def test_basic_convert():
         print(key, value)
         print(f'prop_item_key: {key}, value_dict: {dict(value)}')
         assert dict(value) == dict(generated_schema.properties[key])
+
+
+def test_basic_convert():
+    generated_schema = get_schema(HouseBasicSerializer)
+    correct_schema = house_basic_schema
+    assert_generated_and_correct_schemas(generated_schema, correct_schema)
+
+
+def test_full_convert():
+    generated_schema = get_schema(HouseSerializer)
+    correct_schema = house_schema
+    assert_generated_and_correct_schemas(generated_schema, correct_schema)
