@@ -25,3 +25,5 @@ def assert_generated_and_correct_schemas(generated_schema: openapi.Schema, corre
 def test_basic_convert(serializer, correct_schema):
     generated_schema = get_schema(serializer)
     assert_generated_and_correct_schemas(generated_schema, correct_schema)
+
+# TODO add tests that should fail

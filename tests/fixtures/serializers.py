@@ -41,6 +41,7 @@ class HouseOccupierWithHouseSerializer(ModelSerializer):
 
 
 class HouseOccupierWithBasicHouseSerializer(ModelSerializer):
+    openapi_help_text = 'House occupier with house (id and address).'
     house = HouseBasicSerializer(read_only=True)
 
     class Meta:

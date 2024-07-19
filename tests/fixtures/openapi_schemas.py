@@ -47,6 +47,7 @@ square_meters_property = openapi.Schema(
 )
 rooms_number_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,
+    description='Number of rooms.',
 )
 owners_number_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,
@@ -95,7 +96,7 @@ house_schema = openapi.Schema(
         'address',
         'time_build',
         'rooms_number',
-    ],  # TODO get required in base schema (depth=0)
+    ],
     properties={
         'id': id_property,
         'address': address_property,
@@ -142,7 +143,7 @@ house_basic_schema_with_read_only = deepcopy(house_basic_schema)
 house_basic_schema_with_read_only.read_only = True
 house_occupier_with_basic_house_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    description='',
+    description='House occupier with house (id and address).',
     required=[
         'id',
         'name',
