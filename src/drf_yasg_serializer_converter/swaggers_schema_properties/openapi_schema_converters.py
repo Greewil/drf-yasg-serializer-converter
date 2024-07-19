@@ -47,9 +47,14 @@ def _get_required(field: str) -> bool:
         return False
 
 
-def _get_description(field: str) -> [str, None]:
+def _get_field_description(field: str) -> str | None:
     if "help_text=" in field:
         return field.split("help_text='")[-1].split("'")[0]
+
+
+def _get_serializer_description(serializer: Serializer | BaseSerializer) -> str | None:
+    if hasattr(serializer, 'openapi_help_text') and serializer.openapi_help_text:
+        return serializer.openapi_help_text
 
 
 def _specify_field_format(rest_framework_field_type: str, additional_properties: Dict):
@@ -66,7 +71,7 @@ def _parse_rest_framework_field(field, serializer_meta_model_field: models.Field
     rest_framework_field_type = field_str.split("(")[0]
     openapi_field_type = rest_framework_openapi_field_mapping.get(rest_framework_field_type, openapi.TYPE_STRING)
     _specify_field_format(rest_framework_field_type, additional_properties)
-    field_description = _get_description(field_str)
+    field_description = _get_field_description(field_str)
     field_required = _get_required(field_str)
     return field_required, openapi.Schema(type=openapi_field_type,
                                           description=field_description,
@@ -98,8 +103,8 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
         elif isinstance(v, BaseSerializer):  # TODO handle many_to_one/many_to_many fields (arrays of objects)
             object_properties, object_required_properties = _parse_serializer(v)
             additional_properties = _get_additional_properties(v, serializer_meta_model_field)
-            if _get_description(str(v)):
-                field_description = _get_description(str(v))
+            if _get_serializer_description(v):  # openapi_help_text - reserved name for this convertor
+                field_description = _get_serializer_description(v)
             if _get_required(str(v)):
                 required_properties.append(k)
             # properties[k] = openapi.Schema(type=openapi.TYPE_ARRAY,
@@ -123,6 +128,8 @@ def get_schema(serializer: Serializer, description: str = '') -> openapi.Schema:
     if inspect.isclass(serializer) and issubclass(serializer, Serializer):
         serializer = serializer()
     properties, required_properties = _parse_serializer(serializer)
+    if _get_serializer_description(serializer):  # openapi_help_text - reserved name for this convertor
+        description = _get_serializer_description(serializer)
     return_openapi_schema = openapi.Schema(type=openapi.TYPE_OBJECT, properties=properties,
                                            description=description, required=required_properties)
     return return_openapi_schema
