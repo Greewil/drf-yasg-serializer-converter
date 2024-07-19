@@ -11,6 +11,7 @@ rest_framework_openapi_field_mapping = {
     "BooleanField": openapi.TYPE_BOOLEAN,
     "FloatField": openapi.TYPE_NUMBER,
     "DateTimeField": openapi.TYPE_STRING,
+    "DateField": openapi.TYPE_STRING,
     "IntegerField": openapi.TYPE_INTEGER,
     "SerializerMethodField": openapi.TYPE_STRING
 }
@@ -51,11 +52,20 @@ def _get_description(field: str) -> [str, None]:
         return field.split("help_text='")[-1].split("'")[0]
 
 
+def _specify_field_format(rest_framework_field_type: str, additional_properties: Dict):
+    if additional_properties.get("format") is None:
+        if rest_framework_field_type == "DateTimeField":
+            additional_properties['format'] = 'date-time'
+        if rest_framework_field_type == "DateField":
+            additional_properties['format'] = 'date'
+
+
 def _parse_rest_framework_field(field, serializer_meta_model_field: models.Field) -> Tuple[bool, openapi.Schema]:
     additional_properties = _get_additional_properties(field, serializer_meta_model_field)
     field_str = str(field)
     rest_framework_field_type = field_str.split("(")[0]
     openapi_field_type = rest_framework_openapi_field_mapping.get(rest_framework_field_type, openapi.TYPE_STRING)
+    _specify_field_format(rest_framework_field_type, additional_properties)
     field_description = _get_description(field_str)
     field_required = _get_required(field_str)
     return field_required, openapi.Schema(type=openapi_field_type,
