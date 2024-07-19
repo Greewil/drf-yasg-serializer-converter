@@ -1,3 +1,5 @@
+import copy
+
 import pytest
 from drf_yasg import openapi
 
@@ -24,6 +26,14 @@ def assert_generated_and_correct_schemas(generated_schema: openapi.Schema, corre
 ])
 def test_basic_convert(serializer, correct_schema):
     generated_schema = get_schema(serializer)
+    assert_generated_and_correct_schemas(generated_schema, correct_schema)
+
+
+def test_custom_description():
+    custom_description = "This is a custom description"
+    generated_schema = get_schema(HouseBasicSerializer, custom_description)
+    correct_schema = copy.deepcopy(house_basic_schema)
+    correct_schema.description = custom_description
     assert_generated_and_correct_schemas(generated_schema, correct_schema)
 
 # TODO add tests that should fail
