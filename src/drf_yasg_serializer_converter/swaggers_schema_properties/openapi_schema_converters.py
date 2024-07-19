@@ -92,14 +92,20 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
             serializer_meta_model_field = getattr(serializer_meta_model, k).field
         if v.__module__ == "rest_framework.fields":
             property_required, properties[k] = _parse_rest_framework_field(v, serializer_meta_model_field)
-            if property_required:
-                required_properties.append(k)
-        elif isinstance(v, BaseSerializer):
+            # if property_required:  # TODO required dont work on initial schema (depth=0)
+            #     required_properties.append(k)
+        elif isinstance(v, BaseSerializer):  # handle many_to_one fields (arrays of objects)
             object_properties, object_required_properties = _parse_serializer(v)
             additional_properties = _get_additional_properties(v, serializer_meta_model_field)
             field_description = _get_description(str(v))
             if _get_required(str(v)):
                 required_properties.append(k)
+            # properties[k] = openapi.Schema(type=openapi.TYPE_ARRAY,
+            #                                description=field_description,
+            #                                # properties=object_properties,
+            #                                items=,
+            #                                required=object_required_properties,
+            #                                **additional_properties)
             properties[k] = openapi.Schema(type=openapi.TYPE_OBJECT,
                                            description=field_description,
                                            properties=object_properties,

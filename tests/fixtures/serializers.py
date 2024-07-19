@@ -28,3 +28,23 @@ class HouseOccupierSerializer(ModelSerializer):
     class Meta:
         model = HouseOccupierModel
         fields = '__all__'
+
+
+class HouseOccupierWithHouseSerializer(ModelSerializer):
+    house = HouseSerializer(read_only=False)
+
+    class Meta:
+        model = HouseOccupierModel
+        fields = ['id', 'name', 'is_adult',
+                  'house']
+        depth = 1
+
+
+class HouseOccupierWithBasicHouseSerializer(ModelSerializer):
+    house = HouseBasicSerializer(read_only=True)
+
+    class Meta:
+        model = HouseOccupierModel
+        fields = ['id', 'name', 'is_adult',
+                  'house']
+        depth = 1
