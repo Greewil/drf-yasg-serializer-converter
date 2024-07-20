@@ -23,10 +23,10 @@ listed_house_basic_schema = openapi.Schema(
 listed_house_basic_response = openapi.Response('', listed_house_basic_schema)
 
 listed_house_occupier_response = deepcopy(listed_house_basic_response)
-listed_house_occupier_response.schema.properties['items'].item = house_occupier_schema
+listed_house_occupier_response.schema.properties['items'].items = house_occupier_schema
 
 listed_house_with_occupiers_response = deepcopy(listed_house_basic_response)
-listed_house_with_occupiers_response.schema.properties['items'].item = house_with_occupiers_schema
+listed_house_with_occupiers_response.schema.properties['items'].items = house_with_occupiers_schema
 
 listed_house_occupier_with_basic_house_response = deepcopy(listed_house_basic_response)
-listed_house_occupier_with_basic_house_response.schema.properties['items'].item = house_occupier_with_basic_house_schema
+listed_house_occupier_with_basic_house_response.schema.properties['items'].items = house_occupier_with_basic_house_schema
