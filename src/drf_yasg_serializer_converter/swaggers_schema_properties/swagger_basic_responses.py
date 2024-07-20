@@ -66,7 +66,16 @@ def basic_patch_responses(data=None) -> dict:
     }
 
 
-basic_delete_responses = {
+def basic_delete_responses(data=None) -> dict:
+    if not (isinstance(data, Schema) or isinstance(data, SchemaRef)):
+        data = get_schema(data)
+    return {
+        204: data,
+        404: openapi.Response('Object not found.')
+    }
+
+
+basic_delete_responses_without_object = {
     204: openapi.Response('Object deleted.'),
     404: openapi.Response('Object not found.')
 }
