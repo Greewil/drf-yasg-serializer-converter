@@ -100,7 +100,7 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
             property_required, properties[k] = _parse_rest_framework_field(v, serializer_meta_model_field)
             if property_required:
                 required_properties.append(k)
-        elif isinstance(v, BaseSerializer):  # TODO handle many_to_one/many_to_many fields (arrays of objects)
+        elif isinstance(v, BaseSerializer):  # TODO handle many_to_one/many_to_many fields (arrays of objects) (if serializer field have many=true)
             object_properties, object_required_properties = _parse_serializer(v)
             additional_properties = _get_additional_properties(v, serializer_meta_model_field)
             if _get_serializer_description(v):  # openapi_help_text - reserved name for this convertor

@@ -15,15 +15,6 @@ class HouseSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class HouseWithOccupiersSerializer(ModelSerializer):
-    class Meta:
-        model = HouseModel
-        fields = ['id', 'address', 'description', 'time_build', 'square_meters', 'rooms_number',
-                  'owners_number', 'is_abandoned',
-                  'house_occupiers']
-        depth = 1
-
-
 class HouseOccupierSerializer(ModelSerializer):
     class Meta:
         model = HouseOccupierModel
@@ -48,4 +39,15 @@ class HouseOccupierWithBasicHouseSerializer(ModelSerializer):
         model = HouseOccupierModel
         fields = ['id', 'name', 'is_adult',
                   'house']
+        depth = 1
+
+
+class HouseWithOccupiersSerializer(ModelSerializer):
+    house_occupiers = HouseOccupierSerializer(read_only=False, many=True)
+    # HouseOccupierSerializer
+    class Meta:
+        model = HouseModel
+        fields = ['id', 'address', 'description', 'time_build', 'square_meters', 'rooms_number',
+                  'owners_number', 'is_abandoned',
+                  'house_occupiers']
         depth = 1

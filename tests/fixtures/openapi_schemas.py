@@ -38,7 +38,7 @@ description_property = openapi.Schema(
 )
 time_build_property = openapi.Schema(
     type=openapi.TYPE_STRING,
-    read_only=True,  # TODO check why?
+    read_only=True,
     format=openapi.FORMAT_DATETIME,
 )
 square_meters_property = openapi.Schema(
@@ -157,6 +157,7 @@ house_occupier_with_basic_house_schema = openapi.Schema(
     }
 )
 
+# house_occupiers_list_schema = house_occupier_schema
 house_occupiers_list_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
     description='',
@@ -171,6 +172,12 @@ house_occupiers_list_schema = openapi.Schema(
 house_with_occupiers_schema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
     description='',
+    required=[
+        'id',
+        'address',
+        'time_build',
+        'rooms_number',
+    ],
     properties={
         'id': id_property,
         'address': address_property,
