@@ -82,7 +82,7 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
     properties = {}
     field_description = ''
     required_properties = []
-    # checking if there any chance to get NestedSerializer from non default Serializer
+    # checking if there is any chance to get NestedSerializer from non default Serializer
     if (isinstance(serializer, BaseSerializer) and not isinstance(serializer, Serializer)) \
             and hasattr(serializer, 'child') and isinstance(serializer.child, Serializer):
         serializer = serializer.child
@@ -91,8 +91,6 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
     serializer_meta_model = None
     if hasattr(serializer_class, 'Meta') and hasattr(serializer_class.Meta, 'model'):
         serializer_meta_model = serializer_class.Meta.model
-    # if house_occupiers
-    print(f'serializer: {serializer}')
     # parsing fields
     for k, v in serializer.get_fields().items():
         serializer_meta_model_field = None
