@@ -91,6 +91,8 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
     serializer_meta_model = None
     if hasattr(serializer_class, 'Meta') and hasattr(serializer_class.Meta, 'model'):
         serializer_meta_model = serializer_class.Meta.model
+    # if house_occupiers
+    print(f'serializer: {serializer}')
     # parsing fields
     for k, v in serializer.get_fields().items():
         serializer_meta_model_field = None
@@ -100,24 +102,22 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
             property_required, properties[k] = _parse_rest_framework_field(v, serializer_meta_model_field)
             if property_required:
                 required_properties.append(k)
-        elif isinstance(v, BaseSerializer):  # TODO handle many_to_one/many_to_many fields (arrays of objects) (if serializer field have many=true)
+        elif isinstance(v, BaseSerializer):
             object_properties, object_required_properties = _parse_serializer(v)
             additional_properties = _get_additional_properties(v, serializer_meta_model_field)
             if _get_serializer_description(v):  # openapi_help_text - reserved name for this convertor
                 field_description = _get_serializer_description(v)
             if _get_required(str(v)):
                 required_properties.append(k)
-            # properties[k] = openapi.Schema(type=openapi.TYPE_ARRAY,
-            #                                description=field_description,
-            #                                # properties=object_properties,
-            #                                items=,
-            #                                required=object_required_properties,
-            #                                **additional_properties)
-            properties[k] = openapi.Schema(type=openapi.TYPE_OBJECT,
-                                           description=field_description,
-                                           properties=object_properties,
-                                           required=object_required_properties,
-                                           **additional_properties)
+            property_schema = openapi.Schema(type=openapi.TYPE_OBJECT,
+                                             description=field_description,
+                                             properties=object_properties,
+                                             required=object_required_properties,
+                                             **additional_properties)
+            if hasattr(v, 'many') and v.many is not None and v.many:
+                property_schema = openapi.Schema(type=openapi.TYPE_ARRAY,
+                                                 items=property_schema)
+            properties[k] = property_schema
         else:
             pass
     return properties, required_properties
