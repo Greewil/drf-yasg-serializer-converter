@@ -34,5 +34,3 @@ def test_custom_description():
     correct_schema = copy.deepcopy(house_basic_schema)
     correct_schema.description = custom_description
     assert_generated_and_correct_schemas(generated_schema, correct_schema)
-
-# TODO add tests that should fail

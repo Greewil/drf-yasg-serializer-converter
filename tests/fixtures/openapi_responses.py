@@ -29,7 +29,8 @@ listed_house_with_occupiers_response = deepcopy(listed_house_basic_response)
 listed_house_with_occupiers_response.schema.properties['items'].items = house_with_occupiers_schema
 
 listed_house_occupier_with_basic_house_response = deepcopy(listed_house_basic_response)
-listed_house_occupier_with_basic_house_response.schema.properties['items'].items = house_occupier_with_basic_house_schema
+listed_house_occupier_with_basic_house_response.schema.properties['items'].items \
+    = house_occupier_with_basic_house_schema
 
 # basic responses with house_basic_schema
 
