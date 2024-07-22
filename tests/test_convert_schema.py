@@ -19,8 +19,7 @@ def assert_generated_and_correct_schemas(generated_schema: openapi.Schema, corre
 @pytest.mark.parametrize("serializer, correct_schema", [
     (HouseBasicSerializer, house_basic_schema), (HouseSerializer, house_schema),
     (HouseOccupierSerializer, house_occupier_schema),
-    # (HouseWithOccupiersSerializer, house_with_occupiers_schema),
-    # TODO whats happening when lists attached in serializers?
+    (HouseWithOccupiersSerializer, house_with_occupiers_schema),
     (HouseOccupierWithHouseSerializer, house_occupier_with_house_schema),
     (HouseOccupierWithBasicHouseSerializer, house_occupier_with_basic_house_schema),
 ])

@@ -23,7 +23,8 @@ class HouseOccupierModel(models.Model):
     name = models.CharField(max_length=256, null=False, blank=False)
     is_adult = models.BooleanField(default=False, null=False, blank=False)
 
-    house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, null=False, related_name='house_occupiers')
+    house = models.ForeignKey(HouseModel, on_delete=models.CASCADE, blank=False, null=False,
+                              related_name='house_occupiers')
 
     class Meta:
         db_table = 'house_occupier'

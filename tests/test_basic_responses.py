@@ -14,7 +14,7 @@ from .fixtures.openapi_responses import listed_house_occupier_response, listed_h
     basic_get_basic_house_response, basic_post_basic_house_response, basic_put_basic_house_response, \
     basic_patch_basic_house_response, basic_delete_basic_house_response
 from .fixtures.openapi_schemas import house_basic_schema, house_occupier_schema, house_with_occupiers_schema, \
-    house_occupier_with_basic_house_schema, house_schema
+    house_occupier_with_basic_house_schema
 
 
 def assert_generated_and_correct_schemas(generated_response: openapi.Response, correct_response: openapi.Response):
@@ -24,7 +24,7 @@ def assert_generated_and_correct_schemas(generated_response: openapi.Response, c
 @pytest.mark.parametrize("serializer, correct_response", [
     (HouseBasicSerializer, listed_house_basic_response),
     (HouseOccupierSerializer, listed_house_occupier_response),
-    # (HouseWithOccupiersSerializer, listed_house_with_occupiers_response),
+    (HouseWithOccupiersSerializer, listed_house_with_occupiers_response),
     (HouseOccupierWithBasicHouseSerializer, listed_house_occupier_with_basic_house_response),
 ])
 def test_generate_listed_serializer(serializer, correct_response):
@@ -35,7 +35,7 @@ def test_generate_listed_serializer(serializer, correct_response):
 @pytest.mark.parametrize("schema, correct_response", [
     (house_basic_schema, listed_house_basic_response),
     (house_occupier_schema, listed_house_occupier_response),
-    # (house_with_occupiers_schema, listed_house_with_occupiers_response),  # TODO
+    (house_with_occupiers_schema, listed_house_with_occupiers_response),
     (house_occupier_with_basic_house_schema, listed_house_occupier_with_basic_house_response),
 ])
 def test_generate_listed_schema(schema, correct_response):

@@ -2,21 +2,6 @@ from copy import deepcopy
 
 from drf_yasg import openapi
 
-# collection_schema = openapi.Schema(
-#     type=openapi.TYPE_OBJECT,
-#     properties={
-#         'total': openapi.Schema(
-#             type=openapi.TYPE_INTEGER,
-#             description='Total number of objects without limiting.',
-#             example='100'
-#         ),
-#         'items': openapi.Schema(
-#             type=openapi.TYPE_ARRAY,
-#             description='List of returning items.',
-#             items=obj_to_use
-#         )
-#     }
-# )
 
 id_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,
@@ -72,6 +57,10 @@ occupier_is_adult_property = openapi.Schema(
     type=openapi.TYPE_BOOLEAN,
     default=False,
 )
+occupier_house_id_property = openapi.Schema(
+    type=openapi.TYPE_STRING,
+    read_only=True,  # TODO should be False
+)
 
 # END properties --------------------------- START schemas
 
@@ -115,11 +104,13 @@ house_occupier_schema = openapi.Schema(
     required=[
         'id',
         'name',
+        'house_id',
     ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
         'is_adult': occupier_is_adult_property,
+        'house_id': occupier_house_id_property,
     }
 )
 
@@ -130,11 +121,13 @@ house_occupier_with_house_schema = openapi.Schema(
     required=[
         'id',
         'name',
+        'house_id',
     ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
         'is_adult': occupier_is_adult_property,
+        'house_id': occupier_house_id_property,
         'house': house_schema,
     }
 )
@@ -147,26 +140,21 @@ house_occupier_with_basic_house_schema = openapi.Schema(
     required=[
         'id',
         'name',
+        'house_id',
         'house',
     ],
     properties={
         'id': id_property,
         'name': occupier_name_property,
         'is_adult': occupier_is_adult_property,
+        'house_id': occupier_house_id_property,
         'house': house_basic_schema_with_read_only,
     }
 )
 
-# house_occupiers_list_schema = house_occupier_schema
 house_occupiers_list_schema = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    description='',
-    required=['id', 'name'],
-    properties={}  # TODO
-
-    # type=openapi.TYPE_ARRAY,
-    # # description='List of returning items.',
-    # items=house_occupier_schema
+    type=openapi.TYPE_ARRAY,
+    items=house_occupier_schema,
 )
 
 house_with_occupiers_schema = openapi.Schema(
