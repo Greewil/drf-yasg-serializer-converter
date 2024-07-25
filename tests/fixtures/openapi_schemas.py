@@ -33,6 +33,10 @@ square_meters_property = openapi.Schema(
 rooms_number_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,
     description='Number of rooms.',
+    **{
+        "minimum": 1,
+        "maximum": 10000,
+    }
 )
 owners_number_property = openapi.Schema(
     type=openapi.TYPE_INTEGER,

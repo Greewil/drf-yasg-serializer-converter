@@ -7,7 +7,8 @@ class HouseModel(models.Model):
     description = models.CharField(max_length=512, null=True, blank=True, default=None)
     time_build = models.DateTimeField(auto_now_add=True)
     square_meters = models.FloatField(default=100.1)
-    rooms_number = models.IntegerField(help_text='Number of rooms.')
+    rooms_number = models.IntegerField(help_text='Number of rooms.',
+                                       validators=[MinValueValidator(1), MaxValueValidator(10000)])
     owners_number = models.IntegerField(default=2, null=False, blank=False,
                                         validators=[MinValueValidator(1), MaxValueValidator(100)])
     is_abandoned = models.BooleanField(default=False, null=False, blank=False)
