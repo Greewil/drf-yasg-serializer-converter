@@ -4,10 +4,10 @@ from drf_yasg import openapi
 from drf_yasg.openapi import SchemaRef, Schema
 from rest_framework.serializers import Serializer
 
-from openapi_schema_converters import get_schema
+from .openapi_schema_converters import get_schema
 
 
-def limited_list_response(description,
+def limited_list_response(description: str,
                           object_schema: Union[Schema, SchemaRef, Serializer]) -> openapi.Response:
     obj_to_use = object_schema
     if not (isinstance(object_schema, Schema) or isinstance(object_schema, SchemaRef)):
@@ -66,7 +66,16 @@ def basic_patch_responses(data=None) -> dict:
     }
 
 
-basic_delete_responses = {
+def basic_delete_responses(data=None) -> dict:
+    if not (isinstance(data, Schema) or isinstance(data, SchemaRef)):
+        data = get_schema(data)
+    return {
+        204: data,
+        404: openapi.Response('Object not found.')
+    }
+
+
+basic_delete_responses_without_object = {
     204: openapi.Response('Object deleted.'),
     404: openapi.Response('Object not found.')
 }

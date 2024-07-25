@@ -11,6 +11,7 @@ rest_framework_openapi_field_mapping = {
     "BooleanField": openapi.TYPE_BOOLEAN,
     "FloatField": openapi.TYPE_NUMBER,
     "DateTimeField": openapi.TYPE_STRING,
+    "DateField": openapi.TYPE_STRING,
     "IntegerField": openapi.TYPE_INTEGER,
     "SerializerMethodField": openapi.TYPE_STRING
 }
@@ -46,9 +47,22 @@ def _get_required(field: str) -> bool:
         return False
 
 
-def _get_description(field: str) -> [str, None]:
+def _get_field_description(field: str) -> str | None:
     if "help_text=" in field:
         return field.split("help_text='")[-1].split("'")[0]
+
+
+def _get_serializer_description(serializer: Serializer | BaseSerializer) -> str | None:
+    if hasattr(serializer, 'openapi_help_text') and serializer.openapi_help_text:
+        return serializer.openapi_help_text
+
+
+def _specify_field_format(rest_framework_field_type: str, additional_properties: Dict):
+    if additional_properties.get("format") is None:
+        if rest_framework_field_type == "DateTimeField":
+            additional_properties['format'] = 'date-time'
+        if rest_framework_field_type == "DateField":
+            additional_properties['format'] = 'date'
 
 
 def _parse_rest_framework_field(field, serializer_meta_model_field: models.Field) -> Tuple[bool, openapi.Schema]:
@@ -56,7 +70,8 @@ def _parse_rest_framework_field(field, serializer_meta_model_field: models.Field
     field_str = str(field)
     rest_framework_field_type = field_str.split("(")[0]
     openapi_field_type = rest_framework_openapi_field_mapping.get(rest_framework_field_type, openapi.TYPE_STRING)
-    field_description = _get_description(field_str)
+    _specify_field_format(rest_framework_field_type, additional_properties)
+    field_description = _get_field_description(field_str)
     field_required = _get_required(field_str)
     return field_required, openapi.Schema(type=openapi_field_type,
                                           description=field_description,
@@ -65,8 +80,9 @@ def _parse_rest_framework_field(field, serializer_meta_model_field: models.Field
 
 def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema], List[str]]:
     properties = {}
+    field_description = ''
     required_properties = []
-    # checking if there any chance to get NestedSerializer from non default Serializer
+    # checking if there is any chance to get NestedSerializer from non default Serializer
     if (isinstance(serializer, BaseSerializer) and not isinstance(serializer, Serializer)) \
             and hasattr(serializer, 'child') and isinstance(serializer.child, Serializer):
         serializer = serializer.child
@@ -87,14 +103,19 @@ def _parse_serializer(serializer: Serializer) -> Tuple[Dict[str, openapi.Schema]
         elif isinstance(v, BaseSerializer):
             object_properties, object_required_properties = _parse_serializer(v)
             additional_properties = _get_additional_properties(v, serializer_meta_model_field)
-            field_description = _get_description(str(v))
+            if _get_serializer_description(v):  # openapi_help_text - reserved name for this convertor
+                field_description = _get_serializer_description(v)
             if _get_required(str(v)):
                 required_properties.append(k)
-            properties[k] = openapi.Schema(type=openapi.TYPE_OBJECT,
-                                           description=field_description,
-                                           properties=object_properties,
-                                           required=object_required_properties,
-                                           **additional_properties)
+            property_schema = openapi.Schema(type=openapi.TYPE_OBJECT,
+                                             description=field_description,
+                                             properties=object_properties,
+                                             required=object_required_properties,
+                                             **additional_properties)
+            if hasattr(v, 'many') and v.many is not None and v.many:
+                property_schema = openapi.Schema(type=openapi.TYPE_ARRAY,
+                                                 items=property_schema)
+            properties[k] = property_schema
         else:
             pass
     return properties, required_properties
@@ -105,6 +126,8 @@ def get_schema(serializer: Serializer, description: str = '') -> openapi.Schema:
     if inspect.isclass(serializer) and issubclass(serializer, Serializer):
         serializer = serializer()
     properties, required_properties = _parse_serializer(serializer)
+    if _get_serializer_description(serializer):  # openapi_help_text - reserved name for this convertor
+        description = _get_serializer_description(serializer)
     return_openapi_schema = openapi.Schema(type=openapi.TYPE_OBJECT, properties=properties,
                                            description=description, required=required_properties)
     return return_openapi_schema
