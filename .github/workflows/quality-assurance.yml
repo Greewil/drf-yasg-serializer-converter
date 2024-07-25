@@ -22,6 +22,5 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions setuptools
-          curl https://bootstrap.pypa.io/ez_setup.py | python
       - name: Test with tox
         run: tox
