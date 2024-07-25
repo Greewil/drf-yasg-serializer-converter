@@ -6,6 +6,7 @@ jobs:
 
   generate_release_from_new_commits:
     runs-on: ubuntu-latest
+    permissions: write-all
     env:
       CHANGELOG_GENERATOR_VERSION: 'v0.3.3'
       VUH_VERSION: 'v1.0.1'

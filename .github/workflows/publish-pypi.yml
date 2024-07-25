@@ -5,6 +5,8 @@ on: [workflow_call]
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
     - name: Checkout
       uses: actions/checkout@v3
