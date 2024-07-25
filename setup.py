@@ -35,6 +35,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Operating System :: Unix",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: Microsoft :: Windows",
