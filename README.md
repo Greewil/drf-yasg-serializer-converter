@@ -4,6 +4,14 @@
 
 Converts django serializer to openapi schema.
 
+## Installation
+
+```
+pip install drf-yasg-serializer-converter
+```
+
+For more info you can visit [pypi page](https://pypi.org/project/drf-yasg-serializer-converter/).
+
 ## License
 
 drf-yasg-serializer-converter is licensed under the terms of the MIT License. See [LICENSE] file.
